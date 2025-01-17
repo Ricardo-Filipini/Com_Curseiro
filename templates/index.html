@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concursos Cebraspe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .concurso-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .concurso-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .concurso-titulo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .concurso-info {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .concurso-status {
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .status-novos {
+            background-color: #28a745;
+            color: white;
+        }
+        .status-inscricoes {
+            background-color: #007bff;
+            color: white;
+        }
+        .status-andamento {
+            background-color: #ffc107;
+            color: black;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding-bottom: 40px;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+        .filtros {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .mais-info-btn {
+            background-color: #D89300;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+        .mais-info-btn:hover {
+            background-color: #b87b00;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="mb-0">Concursos da Banca Cebraspe</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="filtros">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="">Todos</option>
+                        {% for status in status_options %}
+                        <option value="{{ status }}" {% if status == current_status %}selected{% endif %}>{{ status }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Salário</label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="number" name="min_salario" class="form-control" placeholder="Min" value="{{ min_salario }}">
+                        </div>
+                        <div class="col">
+                            <input type="number" name="max_salario" class="form-control" placeholder="Max" value="{{ max_salario }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Vagas</label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="number" name="min_vagas" class="form-control" placeholder="Min" value="{{ min_vagas }}">
+                        </div>
+                        <div class="col">
+                            <input type="number" name="max_vagas" class="form-control" placeholder="Max" value="{{ max_vagas }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="row">
+            {% for concurso in concursos %}
+            <div class="col-md-6 mb-4">
+                <div class="concurso-card">
+                    <div class="concurso-status 
+                        {% if concurso.status == 'Novos' %}status-novos
+                        {% elif concurso.status == 'Inscrições Abertas' %}status-inscricoes
+                        {% else %}status-andamento{% endif %}">
+                        {{ concurso.status }}
+                    </div>
+                    <div class="concurso-titulo">{{ concurso.titulo }}</div>
+                    <div class="concurso-info">
+                        <div>{{ concurso.vagas }}</div>
+                        <div>{{ concurso.salario }}</div>
+                    </div>
+                    <a href="{{ concurso.link }}" target="_blank" class="mais-info-btn">MAIS INFORMAÇÕES</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
